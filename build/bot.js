@@ -20,22 +20,47 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Discord = __importStar(require("discord.js"));
+const schedule = __importStar(require("node-schedule"));
 const client = new Discord.Client();
+var names = ['love', 'bubs', 'hun', 'ava'];
 //TODO:: CHANGE THIS TO AVA'S ID
 const avaID = '224494447239495682';
 var avaUser;
+var goodNightSchedule;
 client.on('ready', async () => {
     console.log(`Logged in as ${client.user?.tag}!`);
     avaUser = await client.users.fetch(avaID);
-    sendAvaMessage('fjasdk');
+    createGoodnightSchedules();
 });
+function createGoodnightSchedules() {
+    const goodNightRule = new schedule.RecurrenceRule();
+    goodNightRule.minute = new schedule.Range(0, 59);
+    goodNightSchedule = schedule.scheduleJob(goodNightRule, function () {
+        return sendAvaMessage(`goodnight, ${getRandomName()}`);
+    });
+}
 client.on('message', async (message) => {
     var user = message.author;
-    if (user.id === client.user?.id)
+    var content = message.content;
+    if (user.id !== avaID)
         return;
-    message.channel.send('bruh');
+    if (contains(content, 'i love you', 'i love u', 'i luv you', 'i luv u')) {
+        sendAvaMessage(`i love you too, ${getRandomName()}`);
+        return;
+    }
 });
 function sendAvaMessage(message) {
     avaUser.send(message);
 }
+function getRandomName() {
+    var rndNum = Math.floor((Math.random() * (names.length)));
+    return names[rndNum];
+}
 client.login('ODYwNjM1NDEyMjg0NzAyNzIw.YN-HMA.ftzSqbckjFvqhS2Bx8fVrwI_0Hs');
+function contains(str, ...phrases) {
+    for (var x = 0; x < phrases.length; x++) {
+        if (str.includes(phrases[x]))
+            return true;
+    }
+    return false;
+}
