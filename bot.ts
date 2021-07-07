@@ -21,7 +21,7 @@ var dailyMessageMap: Map<number, string> = new Map<number, string>(
 	// [[0, 'message'], [1, 'lmfao']] (template)
 );
 
-client.login('ODYwNjM1NDEyMjg0NzAyNzIw.YN-HMA.ftzSqbckjFvqhS2Bx8fVrwI_0Hs');
+client.login('ODYwNjM1NDEyMjg0NzAyNzIw.YN-HMA.ftzSqbckjFvqhS2Bx8fVrwI_0Hs'); // hard coding ids like this is a bad idea
 
 client.on('ready', async () => {
 	console.log(`Logged in as ${client.user?.tag}!`);
@@ -38,7 +38,7 @@ client.on('message', (message: Discord.Message) => {
 	if(user.id !== avaID) return;
 
 	if(contains(content, 'i love you', 'i love u', 'i luv you', 'i luv u')) {
-		sendAvaMessage(`i love you too${getRandomName()}${getRndInt(0, 2) ? '!' : ''}`);
+		sendAvaMessage(`i love you too ${getRandomName()}${getRndInt(0, 2) ? '!' : ''}`); // fixed spacing
 		return;
 	}
 });
@@ -49,10 +49,12 @@ async function sendAvaMessage(message: string) {
 		await avaUser.createDM();
 	}
 
+	// why?
 	if(avaUser.dmChannel == null) {
 		console.log("FUCK");
 	}
 
+	// why are we using `dmChannel?`, this should never be null. you're missing an undefined check tho
 	avaUser.dmChannel?.startTyping();
 
 	setTimeout(() => {
@@ -98,7 +100,7 @@ function createSchedules() {
 	goodNightSchedule = schedule.scheduleJob(dailyMessageRule, (date: Date) => {
 		var dayOfWeek: number = date.getDay();
 
-		return sendAvaMessage(dailyMessageMap.get(dayOfWeek) as string);
+		return sendAvaMessage(dailyMessageMap.get(dayOfWeek) as string); // Why is this type assertion needed? It should already be a string.
 
 	});
 }
